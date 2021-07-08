@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /*background-color: black;*/
+        }
+
+        main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            height: 100vh;
+            color: gray;
+        }
+
+        span {
+            display: inline-block;
+        }
+
+        .move {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .split {
+            position: relative;
+        }
+
+        .color {
+            transition: color 0.2s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+
+        <h2>
+            <span class="split">
+                あ
+            </span>
+            <span class="split">
+                い
+            </span>
+            <span class="split">
+                う
+            </span>
+            <span class="split">
+                え
+            </span>
+            <span class="split">
+                お
+            </span>
+        </h2>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/CSSRulePlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/EaselPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/MotionPathPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/PixiPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/TextPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/EasePack.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script>
+
+        const mvAnime = function (n) {
+            return new Promise(resolve => {
+                console.log(n);
+                $('span span').each(function () {
+                    var randomColor = "rgb(" + (~~(256 * Math.random())) + ", " + (~~(256 * Math.random())) + ", " + (~~(256 * Math.random())) + ")";
+                    var random = Math.floor(Math.random() * 500) + 1500;
+                    gsap.fromTo($(this),
+                        {
+                            x: $(this).attr('data-x'),
+                            y: $(this).attr('data-y'),
+                            rotationZ: random + 'deg',
+                            rotationY: random + 'deg',
+                            rotationX: random + 'deg',
+                            color: randomColor,
+                            opacity: 0,
+                        },
+                        {
+                            x: 0,
+                            y: 0,
+                            rotationZ: '0deg',
+                            rotationY: '0deg',
+                            rotationX: '0deg',
+                            opacity: 0.5,
+                            //color: 'black',
+                            duration: Math.random(),
+                            delay: Math.random(),
+                            onComplete: pageFixAct($(this))
+                        })
+                })
+                resolve(n);
+            })
+        };
+
+        const pageFixAct = function (element) {
+
+            setTimeout(function () {
+                gsap.to(element,
+                    {
+                        color: 'black',
+                        duration: 1,
+                    })
+            }, 1500);
+
+            //onScrollHandler();
+            //$window.on("scroll", onScrollHandler);
+        };
+
+        async function execAnime() {
+            const result = await mvAnime(1);
+            console.log(result);
+            return result;
+        }
+
+        const splitInit = function () {
+            $('.split').each(function () {
+                var clone = $(this).clone().addClass('move').removeClass('split');
+                for (var $i = 0; $i < 3; $i++) {
+                    console.log(clone, '1');
+                    $(this).append(clone);
+                    console.log(clone, '2');
+                }
+            })
+        }
+
+        $(window).on("load", function () {
+            var tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+            splitInit();
+            execAnime().then(result => {
+                //pageFixAct();
+                console.log(result);
+            });
+        });
+
+    </script>
+</body>
+
+</html>
